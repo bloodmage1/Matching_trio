@@ -81,7 +81,7 @@ def display_rules():
     screen.blit(back_text, back_rect)
     return back_button
 
-level = 1  # 현재 레벨
+level = 1  
 display_time = 5.0 
 
 def setup_game():
@@ -93,7 +93,7 @@ def setup_game():
     current_group = None
     wrong_click = False
     showing_wrong = False
-    if display_time > 3:  # 초기화 시 display_time 설정
+    if display_time > 3:  
         display_time -= 0.5
         display_time -= 1
 
@@ -148,14 +148,14 @@ def display_game_screen():
     font = pygame.font.Font(나눔고딕_path, 30)
     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
 
-    if not hidden and elapsed_time > display_time:  # 주어진 시간이 지나면 숫자 숨기기
+    if not hidden and elapsed_time > display_time: 
         hidden = True
 
-    if 0 < elapsed_time <= display_time:  # 경과 시간이 0보다 크고 display_time 이하일 때만 시간 텍스트 표시
+    if 0 < elapsed_time <= display_time:  
         time_text = font.render(f"Time: {display_time - elapsed_time:.1f}", True, WHITE)
-        screen.blit(time_text, (screen_width - 150, 20))  # 시간 텍스트를 화면에 그리기
+        screen.blit(time_text, (screen_width - 150, 20)) 
 
-    all_cleared = all(len(group) == 0 for group in number_groups)  # 모든 숫자가 지워졌는지 확인
+    all_cleared = all(len(group) == 0 for group in number_groups)  
     if all_cleared:
         if display_time > 3:
             display_time -= 0.5
@@ -163,24 +163,24 @@ def display_game_screen():
             level += 1
         else:
             message = "축하합니다. 당신은 기억력 챔피언입니다."
-            current_screen = 'menu'  # 메뉴 화면으로 돌아가기
+            current_screen = 'menu'  # 메뉴 화면으로 돌아가는 게 맞나?
         message_text = font.render(message, True, WHITE)
         screen.blit(message_text, (screen_width // 2 - message_text.get_width() // 2, screen_height // 2))
         pygame.display.update()
-        pygame.time.delay(3000)  # 3초 동안 메시지 표시
-        setup_game()  # 게임 초기화
+        pygame.time.delay(3000)  # 3초 
+        setup_game()  
         return
 
-    if elapsed_time > 0:  # 경과 시간이 0보다 클 때만 숫자를 그립니다
+    if elapsed_time > 0: 
         for group in number_groups:
             for rect in group:
                 if hidden:
-                    pygame.draw.rect(screen, GRAY, rect)  # 숫자 숨기기
+                    pygame.draw.rect(screen, GRAY, rect)  
                 else:
                     number = number_groups.index(group) + 1
                     cell_text = game_font.render(str(number), True, WHITE)
                     text_rect = cell_text.get_rect(center=rect.center)
-                    screen.blit(cell_text, text_rect)  # 숫자 표시
+                    screen.blit(cell_text, text_rect) 
 
     if showing_wrong:
         wrong_text = font.render("Wrong", True, RED)
@@ -200,52 +200,25 @@ def display_game_screen():
     screen.blit(back_text, back_rect)
     return back_button
 
-# def check_click(pos):
-#     global current_group, wrong_click
-#     if current_group is None:  # 첫 번째 클릭 처리
-#         for i, group in enumerate(number_groups):
-#             for rect in group:
-#                 if rect.collidepoint(pos):
-#                     current_group = i
-#                     number_groups[current_group].remove(rect)
-#                     if not number_groups[current_group]:  # 현재 그룹이 비어 있는지 확인
-#                         current_group += 1
-#                         if current_group >= len(number_groups):
-#                             current_group = 0  # 첫 번째 그룹으로 리셋하거나 게임 종료 처리
-#                     return True
-#         wrong_click = True
-#         return False
-#     else:  # 이후 클릭 처리
-#         for rect in number_groups[current_group]:
-#             if rect.collidepoint(pos):
-#                 number_groups[current_group].remove(rect)
-#                 if not number_groups[current_group]:  # 현재 그룹이 비어 있는지 확인
-#                     current_group += 1
-#                     if current_group >= len(number_groups):
-#                         current_group = 0  # 첫 번째 그룹으로 리셋하거나 게임 종료 처리
-#                 return True
-#         wrong_click = True
-#         return False
-
 def check_click(pos):
     global current_group, wrong_click, showing_wrong
-    if current_group is None:  # 첫 번째 클릭 처리
+    if current_group is None:  
         for i, group in enumerate(number_groups):
             for rect in group:
                 if rect.collidepoint(pos):
                     current_group = i
                     number_groups[current_group].remove(rect)
-                    if not number_groups[current_group]:  # 현재 그룹이 비어 있는지 확인
+                    if not number_groups[current_group]: 
                         current_group = None
                     return True
         wrong_click = True
         showing_wrong = True
         return False
-    else:  # 이후 클릭 처리
+    else:  
         for rect in number_groups[current_group]:
             if rect.collidepoint(pos):
                 number_groups[current_group].remove(rect)
-                if not number_groups[current_group]:  # 현재 그룹이 비어 있는지 확인
+                if not number_groups[current_group]:
                     current_group = None
                 return True
         wrong_click = True
@@ -262,13 +235,13 @@ while running:
         elif event.type == pygame.MOUSEBUTTONUP:  # 사용자가 마우스 클릭하는 경우
             pos = pygame.mouse.get_pos()
             if current_screen == 'menu':
-                if menu_buttons['rule'].collidepoint(pos):  # rule 버튼 클릭 -> current_screen -> rule
+                if menu_buttons['rule'].collidepoint(pos):  
                     current_screen = 'rule'
                 elif menu_buttons['mode1'].collidepoint(pos):
-                    setup_game()  # 게임 초기화 함수 호출
+                    setup_game()  
                     current_screen = 'game_3'
                 elif menu_buttons['mode2'].collidepoint(pos):
-                    setup_game()  # 게임 초기화 함수 호출
+                    setup_game()
                     current_screen = 'game_4'
 
             elif current_screen == 'rule' and back_button and back_button.collidepoint(pos):
@@ -278,7 +251,7 @@ while running:
             elif current_screen == 'game_4' and back_button and back_button.collidepoint(pos):
                 current_screen = 'menu'
             elif current_screen in ['game_3', 'game_4']:
-                if showing_wrong:  # 잘못된 클릭 메시지가 표시된 경우
+                if showing_wrong:  
                     showing_wrong = False
                     current_screen = 'menu'
                 else:
